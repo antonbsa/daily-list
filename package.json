@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod CRON_TIME=08:30 PARTICIPANTS_LIST=\"Anton,Gabriel,Guilherme,Gustavo T.,João Victor,Ramón,Tainan,Tiago\" node src/index.js",
+    "start": "cross-env NODE_ENV=prod CRON_TIME=08:30 PARTICIPANTS_LIST=\"Anton,Gabriel,Guilherme,Gustavo Emanuel,Gustavo T.,João Victor,Ramón,Tainan,Tiago\" node src/index.js",
     "dev": "nodemon src/index.js"
   },
   "keywords": [],

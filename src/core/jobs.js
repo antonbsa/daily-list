@@ -11,14 +11,19 @@ const envs = {
 
 function initobs() {
   const scronTimeSlit = envs.cronTime.split(':') ?? '*:*';
-  const firstJob = new CronJob(`${scronTimeSlit[1]} ${scronTimeSlit[0]} * * 1-5`, () => {
-    console.log('bombou!!!');
+  const dailyListJob = new CronJob(`${scronTimeSlit[1]} ${scronTimeSlit[0]} * * 1-5`, async () => {
+    const currentList = getRandomizeList();
+    const {
+      chosen: chosenPlayMusic,
+      isCycleFinished,
+    } = getNextToPlaySong();
+    await sendListOnMetting(currentList, chosenPlayMusic, isCycleFinished);
   },
     null,
     true,
     'America/Sao_Paulo',
   );
-  if (scronTimeSlit) firstJob.start();
+  if (scronTimeSlit) dailyListJob.start();
 
   // repetitive job on devMode
   if (envs.devMode) {
