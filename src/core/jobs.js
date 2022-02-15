@@ -1,34 +1,82 @@
+const CronJob = require('cron').CronJob;
 const { sendListOnMetting } = require('../playwright');
 const { getRandomizeList, getNextToPlaySong } = require('./randomize');
+const api = require('../api');
 
-const CronJob = require('cron').CronJob;
+const prodMode = process.env.NODE_ENV === 'prod';
 
-// maybe it is not good practice
-const envs = {
-  devMode: process.env.NODE_ENV !== 'prod',
-  cronTime: process.env.CRON_TIME,
+async function job(dailyId) {
+  try {
+    const { data: response } = await api.get(`/daily/data/${dailyId}`);
+    const { success, data } = response;
+    if (!success) {
+
+    }
+    const {
+      project_name,
+      participants,
+      access_url,
+      last_speak_list,
+      already_played_music,
+    } = data;
+    console.log(`Starting reminder to ${project_name}`);
+
+    const currentList = getRandomizeList(last_speak_list ?? participants);
+    data.last_speak_list = currentList;
+
+    const {
+      selectedPerson,
+      listUpdated,
+      isCycleFinished,
+    } = getNextToPlaySong(participants, already_played_music);
+    data.already_played_music = listUpdated;
+    try {
+      await sendListOnMetting(access_url, currentList, selectedPerson, isCycleFinished);
+      await api.post(`/daily/update/${dailyId}`, {
+        ...data
+      });
+    } catch (e) {
+      console.log('Not able to send list or update data. Please, do it manually');
+      console.log(e);
+    }
+  } catch (err) {
+    console.log('job error');
+    console.log(err);
+  }
 }
 
-function initobs() {
-  const scronTimeSlit = envs.cronTime.split(':') ?? '*:*';
-  const dailyListJob = new CronJob(`${scronTimeSlit[1]} ${scronTimeSlit[0]} * * 1-5`, async () => {
-    const currentList = getRandomizeList();
-    const {
-      chosen: chosenPlayMusic,
-      isCycleFinished,
-    } = getNextToPlaySong();
-    await sendListOnMetting(currentList, chosenPlayMusic, isCycleFinished);
-  },
-    null,
-    true,
-    'America/Sao_Paulo',
-  );
-  if (scronTimeSlit) dailyListJob.start();
+async function initobs() {
+  try {
+    const { data: response } = await api.get('/daily/all-reminders');
+    const { success, data } = response;
+    if (!success) {
+      console.log('no success');
+      return;
+    }
+
+    data.forEach(daily => {
+      const {
+        _id: id,
+        daily_time: time,
+      } = daily;
+      const timeSplitted = time?.split(':') ?? '*:*';
+
+      const dailyJob = new CronJob(`${timeSplitted[1]} ${timeSplitted[0]} * * 1-5`,
+        () => job(id),
+        null,
+        true,
+        'America/Sao_Paulo',
+      );
+      dailyJob.start();
+    });
+  } catch (err) {
+    console.log(err);
+  }
 
   // repetitive job on devMode
-  if (envs.devMode) {
+  if (!prodMode) {
     const devJob = new CronJob('*/10 * * * * *', () => {
-      console.log(`${new Date().toLocaleTimeString('pt-BR')} :: Running on dev mode`);
+      console.log(`${new Date().toLocaleTimeString('pt-BR')} :: Running on dev/test mode`);
     },
       null,
       true,
@@ -38,16 +86,11 @@ function initobs() {
   }
 }
 
-async function fakeJob() {
-  const currentList = getRandomizeList();
-  const {
-    chosen: chosenPlayMusic,
-    isCycleFinished,
-  } = getNextToPlaySong();
-  await sendListOnMetting(currentList, chosenPlayMusic, isCycleFinished);
+async function forcedJob(id) {
+  await job(id);
 }
 
 module.exports = {
   initobs,
-  fakeJob,
+  forcedJob,
 }

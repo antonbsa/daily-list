@@ -4,17 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_ENV=prod CRON_TIME=08:30 PARTICIPANTS_LIST=\"Anton,Gabriel,Guilherme,Gustavo Emanuel,Gustavo T.,João Victor,Ramón,Tainan,Tiago\" node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "cross-env NODE_ENV=prod node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.25.0",
     "cron": "^1.8.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "mongoose": "^6.2.1",
     "playwright": "^1.18.1"
   },
   "devDependencies": {
