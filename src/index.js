@@ -4,10 +4,10 @@ const { initobs, forcedJob } = require('./core/jobs');
 const { getReminders, addDaily, updateDaily, getData } = require('./core/service/controllers');
 const { connectToDatabase } = require('./core/service/database');
 
-connectToDatabase();
-
 const app = express();
 app.use(express.json());
+
+connectToDatabase();
 
 initobs();
 
@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
   res.status(200).json({ message: 'Hello World!' });
 });
 
-app.post('/job-forced/:id', async function (req, res) {
+app.get('/job-forced/:id', async function (req, res) {
   const id = req.params.id;
   await forcedJob(id);
   return res.status(200).send('Finish forced job');

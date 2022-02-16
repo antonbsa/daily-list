@@ -47,6 +47,7 @@ async function job(dailyId) {
 
 async function initobs() {
   try {
+    console.log('Initiating Jobs');
     const { data: response } = await api.get('/daily/all-reminders');
     const { success, data } = response;
     if (!success) {
@@ -58,6 +59,7 @@ async function initobs() {
       const {
         _id: id,
         daily_time: time,
+        project_name,
       } = daily;
       const timeSplitted = time?.split(':') ?? '*:*';
 
@@ -68,8 +70,10 @@ async function initobs() {
         'America/Sao_Paulo',
       );
       dailyJob.start();
+      console.log(`⏰ Reminder to ${project_name} configured`);
     });
   } catch (err) {
+    console.log('inside error initJobs');
     console.log(err);
   }
 
@@ -87,6 +91,7 @@ async function initobs() {
 }
 
 async function forcedJob(id) {
+  console.log('initializing forced job');
   await job(id);
 }
 
