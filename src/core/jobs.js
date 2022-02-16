@@ -32,9 +32,7 @@ async function job(dailyId) {
     data.already_played_music = listUpdated;
     try {
       await sendListOnMetting(access_url, currentList, selectedPerson, isCycleFinished);
-      await api.post(`/daily/update/${dailyId}`, {
-        ...data
-      });
+      await api.post(`/daily/update/${dailyId}`, data);
     } catch (e) {
       console.log('Not able to send list or update data. Please, do it manually');
       console.log(e);
