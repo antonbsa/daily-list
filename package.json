@@ -7,7 +7,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "prestart": "npx playwright install chromium",
+    "prestart": "npx playwright install chromium; sudo npx playwright install-deps",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "node test.js"
