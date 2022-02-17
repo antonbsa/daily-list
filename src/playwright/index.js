@@ -1,4 +1,3 @@
-const playwright = require('playwright');
 const { chromium } = require('playwright-chromium');
 const e = require('./elements');
 
