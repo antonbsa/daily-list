@@ -6,10 +6,6 @@ const { connectToDatabase } = require('./core/service/database');
 
 const app = express();
 app.use(express.json());
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", process.env.URL_BASE);
-  next();
-})
 
 connectToDatabase();
 

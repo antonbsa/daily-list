@@ -1,8 +1,9 @@
 const playwright = require('playwright');
+const { chromium } = require('playwright-chromium');
 const e = require('./elements');
 
 async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFinished) {
-  const browser = await playwright.chromium.launch({
+  const browser = await chromium.launch({
     headless: true
   });
 
@@ -21,7 +22,7 @@ async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFini
     return message;
   }
   const message = `🚨 Ordem da daily de hoje: 🚨
-  ${renderList()}==========
+  ${renderList()}====================
   Quem cuida da música na próxima meeting é o 
   🎵 ${chosenPlayMusic}!
   ${isCycleFinished ? '\n(próxima meeting com ciclo novo de música)' : ''}`;

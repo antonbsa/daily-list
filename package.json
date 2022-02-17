@@ -20,7 +20,7 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "mongoose": "^6.2.1",
-    "playwright": "^1.18.1"
+    "playwright-chromium": "^1.19.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
