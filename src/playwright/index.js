@@ -3,7 +3,8 @@ const e = require('./elements');
 
 async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFinished) {
   const browser = await chromium.launch({
-    headless: true
+    headless: true,
+    chromiumSandbox: false,
   });
 
   const page = await browser.newPage();
