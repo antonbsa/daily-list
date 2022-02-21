@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "npx playwright install; npx playwright install chromium; npx playwright install-deps",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "node test.js"
@@ -18,7 +17,6 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "mongoose": "^6.2.1",
-    "playwright": "^1.19.1",
     "playwright-chromium": "^1.19.1"
   },
   "devDependencies": {
