@@ -1,8 +1,10 @@
-const { chromium } = require('playwright-chromium');
+const playwright = require('playwright-chromium');
+const chromium = require('chrome-aws-lambda')
 const e = require('./elements');
 
 async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFinished) {
-  const browser = await chromium.launch({
+  const browser = await playwright.chromium.launch({
+    args: chromium.args,
     headless: true,
     chromiumSandbox: false,
   });
