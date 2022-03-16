@@ -20,7 +20,7 @@ app.get('/job-forced/:id', connectToMongo, async function (req, res) {
 });
 
 const daily = express.Router();
-app.use('/daily', daily);
+app.use('/daily', connectToMongo, daily);
 daily.get('/all-reminders', getReminders);
 daily.post('/add-daily', addDaily);
 daily.get('/data/:id', getData);
