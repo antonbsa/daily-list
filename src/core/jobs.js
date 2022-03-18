@@ -22,11 +22,10 @@ async function runListJob(req, res) {
     const {
       selectedPerson,
       listUpdated,
-      isCycleFinished,
     } = getNextToPlaySong(participants, already_played_music);
     data.already_played_music = listUpdated;
 
-    await sendListOnMetting(access_url, currentList, selectedPerson, isCycleFinished);
+    await sendListOnMetting(access_url, currentList, selectedPerson);
     await api.post(`/daily/update/${dailyId}`, data);
     return res.status(200).send(`Complete List job to ${project_name}!`);
   } catch (err) {

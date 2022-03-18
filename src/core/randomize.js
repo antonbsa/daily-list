@@ -4,7 +4,6 @@ function getRandomizeList(list) {
 
 function getNextToPlaySong(participants, listPlayedSong) {
   const difference = participants.filter(x => !listPlayedSong.includes(x));
-  const isCycleFinished = difference.length === 1;
   if (difference.length === 0) {
     difference.push(...participants);
     listPlayedSong = [];
@@ -22,7 +21,6 @@ function getNextToPlaySong(participants, listPlayedSong) {
   return {
     selectedPerson,
     listUpdated: listPlayedSong,
-    isCycleFinished,
   }
 }
 

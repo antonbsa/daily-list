@@ -1,6 +1,6 @@
 const Page = require('./page');
 
-async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFinished) {
+async function sendListOnMetting(joinUrl, userList, chosenPlayMusic) {
   try {
     const page = new Page();
     await page.init(joinUrl);
@@ -14,9 +14,7 @@ async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFini
     }
     const message = `🚨 Ordem da daily de hoje: 🚨
     ${renderList()}====================
-    Quem cuida da música na próxima meeting é o
-  🎵 ${chosenPlayMusic}!
-  ${isCycleFinished ? '\n(próxima meeting com ciclo novo de música)' : ''}`;
+    🎵 Próxima música: ${chosenPlayMusic}!`;
 
     await page.sendMessage(message);
     await page.close();
@@ -30,7 +28,7 @@ async function sendMusicResponsible(joinUrl, participantName) {
     const page = new Page();
     await page.init(joinUrl);
 
-    const message = `Música de hoje é do: ${participantName}`;
+    const message = `🎵 Música de hoje: ${participantName}!`;
 
     await page.sendMessage(message);
     await page.close();
