@@ -1,39 +1,45 @@
-const { chromium } = require('playwright-chromium');
-const e = require('./elements');
+const Page = require('./page');
 
 async function sendListOnMetting(joinUrl, userList, chosenPlayMusic, isCycleFinished) {
-  const browser = await chromium.launch({
-    headless: true,
-    chromiumSandbox: false,
-  });
+  try {
+    const page = new Page();
+    await page.init(joinUrl);
 
-  const page = await browser.newPage();
-  await page.goto(joinUrl);
-  await page.fill(e.usernameInput, e.username);
-  await page.click(e.submitButton);
-
-  await page.waitForSelector(e.audioModal);
-  await page.click(e.closeModal);
-  const renderList = () => {
-    let message = '';
-    userList.forEach((user, i) => {
-      message += `${i + 1}- ${user}\n`;
-    })
-    return message;
-  }
-  const message = `🚨 Ordem da daily de hoje: 🚨
-  ${renderList()}====================
-  Quem cuida da música na próxima meeting é o 
+    const renderList = () => {
+      let message = '';
+      userList.forEach((user, i) => {
+        message += `${i + 1}- ${user}\n`;
+      })
+      return message;
+    }
+    const message = `🚨 Ordem da daily de hoje: 🚨
+    ${renderList()}====================
+    Quem cuida da música na próxima meeting é o
   🎵 ${chosenPlayMusic}!
   ${isCycleFinished ? '\n(próxima meeting com ciclo novo de música)' : ''}`;
 
-  await page.fill(e.chatInput, message);
-  await page.click(e.sendButton);
-  await page.click(e.optionsButton);
-  await page.click(e.leaveMeeting);
-  await browser.close();
+    await page.sendMessage(message);
+    await page.close();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function sendMusicResponsible(joinUrl, participantName) {
+  try {
+    const page = new Page();
+    await page.init(joinUrl);
+
+    const message = `Música de hoje é do: ${participantName}`;
+
+    await page.sendMessage(message);
+    await page.close();
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 module.exports = {
   sendListOnMetting,
+  sendMusicResponsible,
 }

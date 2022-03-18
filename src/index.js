@@ -1,28 +1,23 @@
 require('dotenv').config();
 const express = require('express');
-const { initobs, forcedJob } = require('./core/jobs');
+const { runListJob, runMusicReminderJob } = require('./core/jobs');
 const { getReminders, addDaily, updateDaily, getData } = require('./core/service/controllers');
-const { connectToDatabase } = require('./core/service/database');
+const { connectToMongo } = require('./middlewares/mongoConnect');
 
 const app = express();
 app.use(express.json());
-
-connectToDatabase();
-
-initobs();
 
 app.get('/', function (req, res) {
   res.status(200).json({ message: 'Hello World!' });
 });
 
-app.get('/job-forced/:id', async function (req, res) {
-  const id = req.params.id;
-  await forcedJob(id);
-  return res.status(200).send('Finish forced job');
-});
+const job = express.Router();
+app.use('/job', job);
+job.get('/list/:id', runListJob);
+job.get('/music-manager/:id', runMusicReminderJob);
 
 const daily = express.Router();
-app.use('/daily', daily);
+app.use('/daily', connectToMongo, daily);
 daily.get('/all-reminders', getReminders);
 daily.post('/add-daily', addDaily);
 daily.get('/data/:id', getData);
