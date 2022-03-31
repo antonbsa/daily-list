@@ -1,8 +1,8 @@
 const Page = require('./page');
 
 async function sendListOnMetting(joinUrl, userList, chosenPlayMusic) {
+  const page = new Page();
   try {
-    const page = new Page();
     await page.init(joinUrl);
 
     const renderList = () => {
@@ -17,23 +17,29 @@ async function sendListOnMetting(joinUrl, userList, chosenPlayMusic) {
     🎵 Próxima música: ${chosenPlayMusic}!`;
 
     await page.sendMessage(message);
-    await page.close();
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
+  } finally {
+    await page.close();
   }
 }
 
 async function sendMusicResponsible(joinUrl, participantName) {
+  const page = new Page();
   try {
-    const page = new Page();
     await page.init(joinUrl);
 
     const message = `🎵 Música de hoje: ${participantName}!`;
 
     await page.sendMessage(message);
-    await page.close();
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
+  } finally {
+    await page.close();
   }
 }
 

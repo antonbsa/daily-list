@@ -25,7 +25,9 @@ async function runListJob(req, res) {
     } = getNextToPlaySong(participants, already_played_music);
     data.already_played_music = listUpdated;
 
-    await sendListOnMetting(access_url, currentList, selectedPerson);
+    const success = await sendListOnMetting(access_url, currentList, selectedPerson);
+    if (!success) throw new Error('Error sending list to the meeting');
+
     await api.post(`/daily/update/${dailyId}`, data);
     return res.status(200).send(`Complete List job to ${project_name}!`);
   } catch (err) {
@@ -42,9 +44,12 @@ async function runMusicReminderJob(req, res) {
     console.log(`Starting Music Job to ${project_name}`);
 
     const participantName = already_played_music[already_played_music.length - 1];
-    await sendMusicResponsible(access_url, participantName);
+    const success = await sendMusicResponsible(access_url, participantName);
+    if (!success) throw new Error('Error sending music responsible to the meeting');
+
     return res.status(200).send(`Complete Music job to ${project_name}!`);
   } catch (err) {
+    console.log(err);
     return res.status(400).send('Error running music job');
   }
 }
